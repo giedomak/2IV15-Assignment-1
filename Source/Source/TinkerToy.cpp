@@ -3,6 +3,7 @@
 
 #include "Particle.h"
 #include "SpringForce.h"
+#include "Gravity.h"
 #include "RodConstraint.h"
 #include "CircularWireConstraint.h"
 #include "imageio.h"
@@ -16,7 +17,7 @@
 /* macros */
 
 /* external definitions (from solver) */
-extern void simulation_step( std::vector<Particle*> pVector, float dt );
+extern void simulation_step( std::vector<Particle*> pVector, std::vector<IForce*> forces, float dt );
 
 /* global variables */
 
@@ -88,10 +89,16 @@ static void init_system(void)
 	pVector.push_back(new Particle(center + offset));
 	pVector.push_back(new Particle(center + offset + offset));
 	pVector.push_back(new Particle(center + offset + offset + offset));
-	
+
 	// You shoud replace these with a vector generalized forces and one of
 	// constraints...
 	forces.push_back( new SpringForce(pVector[0], pVector[1], dist, 1.0, 1.0));
+
+	// Apply gravity on all particles
+	for (int p = 0; p < pVector.size(); p++) {
+		forces.push_back( new Gravity(pVector[p]));
+	}
+	forces.push_back( new Gravity(pVector[0]));
 
 	//delete_this_dummy_spring = new SpringForce(pVector[0], pVector[1], dist, 1.0, 1.0);
 	delete_this_dummy_rod = new RodConstraint(pVector[1], pVector[2], dist);
@@ -131,12 +138,12 @@ static void post_display ( void )
 			sprintf_s(filename, "snapshots/img%.5i.png", frame_number / FRAME_INTERVAL);
 			printf("Dumped %s.\n", filename);
 			saveImageRGBA(filename, buffer, w, h);
-			
+
 			free(buffer);
 		}
 	}
 	frame_number++;
-	
+
 	glutSwapBuffers ();
 }
 
@@ -276,7 +283,7 @@ static void reshape_func ( int width, int height )
 
 static void idle_func ( void )
 {
-	if ( dsim ) simulation_step( pVector, dt );
+	if ( dsim ) simulation_step( pVector, forces, dt );
 	else        {get_from_UI();remap_GUI();}
 
 	glutSetWindow ( win_id );
@@ -359,9 +366,9 @@ int main ( int argc, char ** argv )
 	dsim = 0;
 	dump_frames = 0;
 	frame_number = 0;
-	
+
 	init_system();
-	
+
 	win_x = 512;
 	win_y = 512;
 	open_glut_window ();

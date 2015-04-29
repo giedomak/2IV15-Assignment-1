@@ -120,5 +120,3 @@ double ConjGrad(int n, implicitMatrix *A, double x[], double b[],
   *steps = i;
   return(rSqrLen);
 }
-
-

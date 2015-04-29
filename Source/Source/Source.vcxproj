@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CircularWireConstraint.cpp" />
+    <ClCompile Include="Gravity.cpp" />
     <ClCompile Include="imageio.cpp" />
     <ClCompile Include="linearSolver.cpp" />
     <ClCompile Include="Particle.cpp" />
@@ -22,6 +23,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CircularWireConstraint.h" />
+    <ClInclude Include="Gravity.h" />
     <ClInclude Include="IForce.h" />
     <ClInclude Include="imageio.h" />
     <ClInclude Include="linearSolver.h" />

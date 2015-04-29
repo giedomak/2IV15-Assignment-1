@@ -8,6 +8,8 @@ class SpringForce: public IForce
  public:
   SpringForce(Particle *p1, Particle * p2, double dist, double ks, double kd);
 
+  virtual void apply();
+
   virtual void draw();
 
  private:
