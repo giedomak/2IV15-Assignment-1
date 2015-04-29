@@ -1,12 +1,14 @@
 #pragma once
 
 #include "Particle.h"
+#include "IForce.h"
 
-class SpringForce {
+class SpringForce: public IForce
+{
  public:
   SpringForce(Particle *p1, Particle * p2, double dist, double ks, double kd);
 
-  void draw();
+  virtual void draw();
 
  private:
 

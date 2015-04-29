@@ -25,5 +25,8 @@
 *.out
 *.app
 
+# Log files
+*.tlog
+
 # Snapshots
 snapshots/

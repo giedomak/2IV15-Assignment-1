@@ -59,6 +59,9 @@
     <ClInclude Include="imageio.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="IForce.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="glut32.dll" />
