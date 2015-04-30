@@ -1,29 +1,8 @@
-﻿Build started 30-4-2015 12:25:11.
-     1>Project "C:\git\2IV15-Assignment-1\Source\Source\Source.vcxproj" on node 2 (Build target(s)).
-     1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Ilib/ /Iinclude/ /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt SpringForce.cpp
-         SpringForce.cpp
-     1>c:\git\2iv15-assignment-1\source\source\include\gfx\vec2.h(96): warning C4005: '_MSC_VER' : macro redefinition
-                 command-line arguments :  see previous definition of '_MSC_VER'
-     1>c:\git\2iv15-assignment-1\source\source\include\gfx\vec2.h(115): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-                 c:\git\2iv15-assignment-1\source\source\springforce.cpp(14) : see reference to function template instantiation 'gfx::TVec2<float> gfx::operator *<float,double>(N,const gfx::TVec2<float> &)' being compiled
-                 with
-                 [
-                     N=double
-                 ]
-       Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\git\2IV15-Assignment-1\Source\Debug\Source.exe" /INCREMENTAL /NOLOGO /LIBPATH:lib/ glut32.lib libpng16.lib zlib.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\git\2IV15-Assignment-1\Source\Debug\Source.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\git\2IV15-Assignment-1\Source\Debug\Source.lib" /MACHINE:X86 Debug\CircularWireConstraint.obj
-         Debug\Gravity.obj
-         Debug\imageio.obj
-         Debug\linearSolver.obj
-         Debug\Particle.obj
-         Debug\RodConstraint.obj
-         Debug\Solver.obj
-         Debug\SpringForce.obj
-         Debug\TinkerToy.obj
-         Source.vcxproj -> C:\git\2IV15-Assignment-1\Source\Debug\Source.exe
-     1>Done Building Project "C:\git\2IV15-Assignment-1\Source\Source\Source.vcxproj" (Build target(s)).
+﻿Build started 30-4-2015 13:02:19.
+     1>Project "C:\Users\Luuk\Documents\GitHub\2IV15-Assignment-1\Source\Source\Source.vcxproj" on node 2 (Clean target(s)).
+       Project file contains ToolsVersion="12.0". This toolset may be unknown or missing, in which case you may be able to resolve this by installing the appropriate version of MSBuild, or the build may have been forced to a particular ToolsVersion for policy reasons. Treating the project as if it had ToolsVersion="4.0". For more information, please see http://go.microsoft.com/fwlink/?LinkId=291333.
+     1>Done Building Project "C:\Users\Luuk\Documents\GitHub\2IV15-Assignment-1\Source\Source\Source.vcxproj" (Clean target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:01.44
+Time Elapsed 00:00:00.03
