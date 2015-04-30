@@ -8,7 +8,8 @@ Gravity::Gravity(Particle *p) :
 
 void Gravity::apply()
 {
-	m_p -> m_Velocity += gravityForce;
+	m_p -> m_Force += gravityForce;
+	
 }
 
 void Gravity::draw()

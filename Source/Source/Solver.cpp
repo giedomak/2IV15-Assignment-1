@@ -6,14 +6,25 @@
 #define RAND (((rand()%2000)/1000.f)-1.f)
 void simulation_step( std::vector<Particle*> pVector,  std::vector<IForce*> forces, float dt )
 {
+
+	// clear forces
+	for (int i = 0; i < pVector.size(); i++) {
+		pVector[i] -> m_Force = 0;
+	}
+
 	// Apply forces
 	for(int i = 0; i < forces.size(); i++) {
 		forces[i] -> apply();
 	}
 
+	// increase vel for each particle
+	for (int i = 0; i < pVector.size(); i++) {
+		pVector[i]->m_Velocity += pVector[i] -> m_Force;
+	}
+
 	// Displace particles with velocity
 	for (int i = 0; i < pVector.size(); i++) {
-		pVector[i] -> m_Position += (pVector[i] -> m_Velocity) / 1000000000;
+		pVector[i] -> m_Position += (pVector[i] -> m_Velocity) / 1;
 	}
 
 	int ii, size = pVector.size();
