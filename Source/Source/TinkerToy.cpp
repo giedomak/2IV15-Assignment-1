@@ -92,7 +92,7 @@ static void init_system(void)
 
 	// You shoud replace these with a vector generalized forces and one of
 	// constraints...
-	forces.push_back( new SpringForce(pVector[0], pVector[1], dist, 1.0, 1.0));
+	forces.push_back( new SpringForce(pVector[0], pVector[1], dist, 0.3, 0.3));
 
 	// Apply gravity on all particles
 

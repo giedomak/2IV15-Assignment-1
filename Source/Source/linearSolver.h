@@ -13,16 +13,16 @@
 // Matrix class the solver will accept
 class implicitMatrix
 {
- public:
-  virtual void matVecMult(double x[], double r[]) = 0;
+public:
+	virtual void matVecMult(double x[], double r[]) = 0;
 };
 
 // Matrix class the solver will accept
 class implicitMatrixWithTrans : public implicitMatrix
 {
- public:
-  virtual void matVecMult(double x[], double r[]) = 0;
-  virtual void matTransVecMult(double x[], double r[]) = 0;
+public:
+	virtual void matVecMult(double x[], double r[]) = 0;
+	virtual void matTransVecMult(double x[], double r[]) = 0;
 };
 
 
@@ -35,8 +35,8 @@ class implicitMatrixWithTrans : public implicitMatrix
 // "steps", as passed, is the maximum number of steps, or 0 (implying MAX_STEPS)
 // Upon completion, "steps" contains the number of iterations taken
 double ConjGrad(int n, implicitMatrix *A, double x[], double b[], 
-		double epsilon,	// how low should we go?
-		int    *steps);
+				double epsilon,	// how low should we go?
+				int    *steps);
 
 // Some vector helper functions
 void vecAddEqual(int n, double r[], double v[]);
