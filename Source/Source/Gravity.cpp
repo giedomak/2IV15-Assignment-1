@@ -3,7 +3,7 @@
 Gravity::Gravity(Particle *p) :
   m_p(p) 
 {
-	gravityForce = Vec2f(0, -9.81);
+	gravityForce = Vec2f(0, -9.81 * 0.001);
 }
 
 void Gravity::apply()

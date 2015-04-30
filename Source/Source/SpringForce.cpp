@@ -3,28 +3,32 @@
 using namespace std;
 
 SpringForce::SpringForce(Particle *p1, Particle * p2, double dist, double ks, double kd) :
-  m_p1(p1), m_p2(p2), m_dist(dist), m_ks(ks), m_kd(kd) {}
+	m_p1(p1), m_p2(p2), m_dist(dist), m_ks(ks), m_kd(kd) {}
 
 void SpringForce::apply()
 {
-
-	
 	Vec2f l = (m_p1->m_Position - m_p2->m_Position);
-	float l_length = sqrt(l*l);
-	Vec2f f = (m_ks * (l_length - m_dist) + m_kd * (m_p1->m_Velocity - m_p2->m_Velocity) *l / l_length) * (l / l_length);
-	m_p1->m_Force += f;
-	m_p2->m_Force -= f;
-	cout << "value1 = " << m_p1->m_Force << endl;
-	cout << "value2 = " << m_p2->m_Force << endl;
+	float l_length = sqrt(l * l);
+
+	Vec2f f = (m_ks * (l_length - m_dist) + m_kd * (((m_p1->m_Velocity - m_p2->m_Velocity) * l) / l_length)) * (l / l_length);
+	//m_p1->m_Force -= f;
+	m_p2->m_Force += f;
 	
+	/*
+	cout << "Req distance: " << m_dist << endl;
+	cout << "Current distance: " << l_length << endl;
+	cout << "value1 = " << f << endl;
+	*/
 }
 
 void SpringForce::draw()
 {
-  glBegin( GL_LINES );
-  glColor3f(0.6, 0.2, 0.8);
-  glVertex2f( m_p1->m_Position[0], m_p1->m_Position[1] );
-  glColor3f(0.6, 0.7, 0.8);
-  glVertex2f( m_p2->m_Position[0], m_p2->m_Position[1] );
-  glEnd();
+	
+	// Draw forces
+	glBegin( GL_LINES );
+	glColor3f(0.6, 0.2, 0.8);
+	glVertex2f( m_p1->m_Position[0], m_p1->m_Position[1] );
+	glColor3f(0.6, 0.2, 0.8);
+	glVertex2f(  m_p2->m_Position[0] , m_p2->m_Position[1]  );
+	glEnd();
 }

@@ -9,7 +9,8 @@ void simulation_step( std::vector<Particle*> pVector,  std::vector<IForce*> forc
 
 	// clear forces
 	for (int i = 0; i < pVector.size(); i++) {
-		pVector[i] -> m_Force = 0;
+		pVector[i] -> m_Force[0] = 0;
+		pVector[i] -> m_Force[1] = 0;
 	}
 
 	// Apply forces
@@ -19,16 +20,15 @@ void simulation_step( std::vector<Particle*> pVector,  std::vector<IForce*> forc
 
 	// increase vel for each particle
 	for (int i = 0; i < pVector.size(); i++) {
-		pVector[i]->m_Velocity += pVector[i] -> m_Force;
+		pVector[i]->m_Velocity += pVector[i] -> m_Force * dt * dt;
 	}
 
 	// Displace particles with velocity
 	for (int i = 0; i < pVector.size(); i++) {
-		pVector[i] -> m_Position += (pVector[i] -> m_Velocity) / 1;
+		pVector[i] -> m_Position += (pVector[i] -> m_Velocity) * dt;
 	}
 
-	int ii, size = pVector.size();
-	
+	int ii, size = pVector.size();	
 	for(ii=0; ii<size; ii++)
 	{
 		//pVector[ii]->m_Position += dt*pVector[ii]->m_Velocity;
