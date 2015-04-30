@@ -27,6 +27,7 @@
 
 # Log files
 *.tlog
+*.pdb
 
 # Snapshots
 snapshots/
