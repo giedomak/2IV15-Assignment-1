@@ -11,14 +11,8 @@ void SpringForce::apply()
 	float l_length = sqrt(l * l);
 
 	Vec2f f = (m_ks * (l_length - m_dist) + m_kd * (((m_p1->m_Velocity - m_p2->m_Velocity) * l) / l_length)) * (l / l_length);
-	//m_p1->m_Force -= f;
+	m_p1->m_Force -= f;
 	m_p2->m_Force += f;
-	
-	/*
-	cout << "Req distance: " << m_dist << endl;
-	cout << "Current distance: " << l_length << endl;
-	cout << "value1 = " << f << endl;
-	*/
 }
 
 void SpringForce::draw()
