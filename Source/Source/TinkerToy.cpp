@@ -24,6 +24,7 @@ extern void simulation_step( std::vector<Particle*> pVector, std::vector<IForce*
 static int N;
 static float dt, d;
 static int dsim;
+static int grav;
 static int dump_frames;
 static int frame_number;
 
@@ -83,6 +84,10 @@ static void init_system(void)
 	const Vec2f center(0.0, 0.0);
 	const Vec2f offset(dist, 0.0);
 
+
+	//creating a random particle for the lulz
+	const Vec2f random(dist * 2, 0.0);
+
 	// Create three particles, attach them to each other, then add a
 	// circular wire constraint to the first.
 
@@ -90,19 +95,26 @@ static void init_system(void)
 	pVector.push_back(new Particle(center + offset + offset + Vec2f(0.1, 0.0)));
 	pVector.push_back(new Particle(center + offset + offset + offset));
 
+	pVector.push_back(new Particle(center - 3 * offset ));
+
 	// You shoud replace these with a vector generalized forces and one of
 	// constraints...
-	forces.push_back( new SpringForce(pVector[0], pVector[1], dist, 0.3, 0.3));
+	
+	//forces.push_back( new SpringForce(pVector[0], pVector[1], dist, 0.3, 0.3));
 
 	// Apply gravity on all particles
 
 	/*for (int p = 0; p < pVector.size(); p++) {
 		forces.push_back( new Gravity(pVector[p]));
 	}*/
-	//forces.push_back( new Gravity(pVector[1]));
+
+	forces.push_back(new Gravity(pVector[1]));
+	
+
+	forces.push_back(new RodConstraint(pVector[0], pVector[1], dist));
 
 	//delete_this_dummy_spring = new SpringForce(pVector[0], pVector[1], dist, 1.0, 1.0);
-	delete_this_dummy_rod = new RodConstraint(pVector[1], pVector[2], dist);
+	//delete_this_dummy_rod = new RodConstraint(pVector[1], pVector[2], dist);
 	delete_this_dummy_wire = new CircularWireConstraint(pVector[0], center, dist);
 }
 
@@ -245,6 +257,10 @@ static void key_func ( unsigned char key, int x, int y )
 		break;
 
 	case 'q':
+	case 'g':
+	case 'G':
+		grav = !grav;
+		break;
 	case 'Q':
 		free_data ();
 		exit ( 0 );
