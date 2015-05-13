@@ -1,11 +1,20 @@
 #include "Particle.h"
 #include "IForce.h"
+#include "linearSolver.h"
 #include <vector>
 
 #define DAMP 0.98f
 #define RAND (((rand()%2000)/1000.f)-1.f)
-void simulation_step( std::vector<Particle*> pVector,  std::vector<IForce*> forces, float dt )
+void simulation_step(std::vector<Particle*> pVector, std::vector<IForce*> forces, std::vector<IForce*> constraints, float dt)
 {
+
+	//implicitMatrixWithTrans * matrix = new implicitMatrixWithTrans();
+
+	// fill matrix with c dot
+
+	// solver.sole(matrix, some other parameters)
+
+	// Loop over particles accumulate forces from solver
 
 	// clear forces
 	for (int i = 0; i < pVector.size(); i++) {

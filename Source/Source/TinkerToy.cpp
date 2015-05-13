@@ -17,7 +17,7 @@
 /* macros */
 
 /* external definitions (from solver) */
-extern void simulation_step( std::vector<Particle*> pVector, std::vector<IForce*> forces, float dt );
+extern void simulation_step(std::vector<Particle*> pVector, std::vector<IForce*> forces, std::vector<IForce*> constraints, float dt);
 
 /* global variables */
 
@@ -40,6 +40,7 @@ static int omx, omy, mx, my;
 static int hmx, hmy;
 
 static std::vector<IForce*> forces;
+static std::vector<IForce*> constraints;
 
 static SpringForce * delete_this_dummy_spring = NULL;
 static RodConstraint * delete_this_dummy_rod = NULL;
@@ -111,7 +112,7 @@ static void init_system(void)
 	forces.push_back(new Gravity(pVector[1]));
 	
 
-	forces.push_back(new RodConstraint(pVector[0], pVector[1], dist));
+	constraints.push_back(new RodConstraint(pVector[0], pVector[1], dist));
 
 	//delete_this_dummy_spring = new SpringForce(pVector[0], pVector[1], dist, 1.0, 1.0);
 	//delete_this_dummy_rod = new RodConstraint(pVector[1], pVector[2], dist);
@@ -300,7 +301,7 @@ static void reshape_func ( int width, int height )
 
 static void idle_func ( void )
 {
-	if ( dsim ) simulation_step( pVector, forces, dt );
+	if ( dsim ) simulation_step( pVector, forces, constraints, dt );
 	else        {get_from_UI();remap_GUI();}
 
 	glutSetWindow ( win_id );
