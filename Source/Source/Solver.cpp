@@ -5,7 +5,7 @@
 
 #define DAMP 0.98f
 #define RAND (((rand()%2000)/1000.f)-1.f)
-void simulation_step(std::vector<Particle*> pVector, std::vector<IForce*> forces, std::vector<IForce*> constraints, float dt)
+void simulation_step(std::vector<Particle*> pVector, std::vector<IForce*> forces, std::vector<IForce*> gravforces, std::vector<IForce*> constraints, float dt)
 {
 
 	//implicitMatrixWithTrans * matrix = new implicitMatrixWithTrans();
@@ -26,7 +26,10 @@ void simulation_step(std::vector<Particle*> pVector, std::vector<IForce*> forces
 	for(int i = 0; i < forces.size(); i++) {
 		forces[i] -> apply();
 	}
-
+	// Apply gravity forces (seperate to be togglable)
+	for (int i = 0; i < gravforces.size(); i++) {
+		gravforces[i]->apply();
+	}
 	// increase vel for each particle
 	for (int i = 0; i < pVector.size(); i++) {
 		pVector[i]->m_Velocity += pVector[i] -> m_Force * dt * dt;

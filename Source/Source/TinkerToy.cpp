@@ -8,8 +8,15 @@
 #include "CircularWireConstraint.h"
 #include "imageio.h"
 #include "IForce.h"
+#include "MouseForce.h"
+#include "Force.h"
+#include <iostream>
+#include <fstream>
+
+using namespace std;
 
 #include <vector>
+#include <algorithm> 
 #include <stdlib.h>
 #include <stdio.h>
 #include <glut.h>
@@ -17,7 +24,7 @@
 /* macros */
 
 /* external definitions (from solver) */
-extern void simulation_step(std::vector<Particle*> pVector, std::vector<IForce*> forces, std::vector<IForce*> constraints, float dt);
+extern void simulation_step(std::vector<Particle*> pVector, std::vector<IForce*> forces, std::vector<IForce*> gravforces, std::vector<IForce*> constraints, float dt);
 
 /* global variables */
 
@@ -39,7 +46,13 @@ static int mouse_shiftclick[3];
 static int omx, omy, mx, my;
 static int hmx, hmy;
 
+Vec2f MousePos;
+int particleSelected = -1;
+
+static std::vector<MouseForce*> mouses;
 static std::vector<IForce*> forces;
+static std::vector<IForce*> gravforces;
+static std::vector<IForce*> gravforcesEmpty;
 static std::vector<IForce*> constraints;
 
 static SpringForce * delete_this_dummy_spring = NULL;
@@ -101,7 +114,14 @@ static void init_system(void)
 	// You shoud replace these with a vector generalized forces and one of
 	// constraints...
 	
-	//forces.push_back( new SpringForce(pVector[0], pVector[1], dist, 0.3, 0.3));
+	int i, size = pVector.size();
+	for (i = 0; i<size; i++)
+	{
+		mouses.push_back(new MouseForce(pVector[i], pVector[i]->m_Velocity, 0.5, 0.5));
+	}
+
+
+	forces.push_back( new SpringForce(pVector[0], pVector[1], dist, 0.3, 0.3));
 
 	// Apply gravity on all particles
 
@@ -109,10 +129,11 @@ static void init_system(void)
 		forces.push_back( new Gravity(pVector[p]));
 	}*/
 
-	forces.push_back(new Gravity(pVector[1]));
+	//apply gravity on the 2nd particle
+	gravforces.push_back(new Gravity(pVector[1]));
 	
 
-	constraints.push_back(new RodConstraint(pVector[0], pVector[1], dist));
+	//constraints.push_back(new RodConstraint(pVector[0], pVector[1], dist));
 
 	//delete_this_dummy_spring = new SpringForce(pVector[0], pVector[1], dist, 1.0, 1.0);
 	//delete_this_dummy_rod = new RodConstraint(pVector[1], pVector[2], dist);
@@ -171,14 +192,26 @@ static void draw_particles ( void )
 	}
 }
 
-static void draw_forces ( void )
+static void draw_forces(void)
 {
-	int size = forces.size();
 
-	for(int n=0; n< size; n++)
+	for_each(forces.begin(), forces.end(), [](IForce* f)
 	{
-		forces[n]->draw();
-	}
+		f->draw();
+	});
+		for_each(gravforces.begin(), gravforces.end(), [](IForce* f)
+		{
+			f->draw();
+		});
+
+	for_each(mouses.begin(), mouses.end(), [](MouseForce* m)
+	{
+		m->draw();
+	});
+
+
+
+
 }
 
 static void draw_constraints ( void )
@@ -261,6 +294,7 @@ static void key_func ( unsigned char key, int x, int y )
 	case 'g':
 	case 'G':
 		grav = !grav;
+		cout << "turned gravity to " << (grav? "TRUE" : "FALSE") << "\n";
 		break;
 	case 'Q':
 		free_data ();
@@ -269,9 +303,18 @@ static void key_func ( unsigned char key, int x, int y )
 
 	case ' ':
 		dsim = !dsim;
+		//put vectors on 0 to restart the simulation
+		//for_each(pVector.begin(), pVector.end(), [](Particle* v) {
+		//	v->m_Velocity = 0;
+
+		//});
 		break;
 	}
 }
+
+
+
+
 
 static void mouse_func ( int button, int state, int x, int y )
 {
@@ -299,11 +342,89 @@ static void reshape_func ( int width, int height )
 	win_y = height;
 }
 
+/*
+----------------------------------------------------------------------
+relates mouse movements to tinker toy construction
+----------------------------------------------------------------------
+*/
+
+static void get_mouse_pos(void)
+{
+	//screen is -1 to 1 in both x and y pos
+	//mouse pos is from 0 to 64
+	float x = 0;
+	float y = 0;
+
+	int i, j;
+	i = (int)((mx / (float)win_x)*N);
+	j = (int)(((win_y - my) / (float)win_y)*N);
+
+	if (!mouse_down[0] && !mouse_down[2] && !mouse_release[0]
+		&& !mouse_shiftclick[0] && !mouse_shiftclick[2]) return;
+
+	if (mouse_down[0])
+	{
+
+		x = i - 32;
+		x = (float)(x / 32);
+
+		y = j - 32;
+		y = (float)(y / 32);
+
+		int i, size = pVector.size();
+
+		for (i = 0; i<size; i++)
+		{
+
+			MousePos[0] = x;
+			MousePos[1] = y;
+
+			float xDis = pVector[i]->m_Position[0] - MousePos[0];
+			float yDis = pVector[i]->m_Position[1] - MousePos[1];
+
+			float distance = xDis*xDis + yDis*yDis;
+
+			if (distance < 0.001)
+			{
+				particleSelected = i;
+			}
+
+			//particle is selected
+			if (particleSelected == i)
+			{
+				mouses[i]->getMouse(MousePos);
+				mouses[i]->setForce(true);
+				mouses[i]->apply();
+			}
+			else
+			{
+				mouses[i]->getMouse(pVector[i]->m_Position);
+				mouses[i]->setForce(false);
+			}
+
+		}
+	}
+	else
+	{
+		particleSelected = -1;
+		int i, size = pVector.size();
+
+		for (i = 0; i < size; i++)
+		{
+			mouses[i]->getMouse(pVector[i]->m_Position);
+			mouses[i]->setForce(false);
+		}
+	}
+}
+
 static void idle_func ( void )
 {
-	if ( dsim ) simulation_step( pVector, forces, constraints, dt );
-	else        {get_from_UI();remap_GUI();}
 
+	if (dsim) simulation_step(pVector, forces, (grav ? gravforces : gravforcesEmpty), constraints, dt);
+	else        { get_from_UI(); remap_GUI(); }
+
+
+	get_mouse_pos();
 	glutSetWindow ( win_id );
 	glutPostRedisplay ();
 }
@@ -318,6 +439,8 @@ static void display_func ( void )
 
 	post_display ();
 }
+
+
 
 
 /*
@@ -368,6 +491,7 @@ int main ( int argc, char ** argv )
 		N = 64;
 		dt = 0.1f;
 		d = 5.f;
+		grav = true;
 		fprintf ( stderr, "Using defaults : N=%d dt=%g d=%g\n",
 			N, dt, d );
 	} else {
